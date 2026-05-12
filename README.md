@@ -32,4 +32,5 @@ A modern AI-powered mental wellness web application with a calming UI, secure us
 
 - The frontend can be deployed as a static app to Vercel or Netlify.
 - The backend is a Flask API and should be deployed separately to Python hosts like Heroku, Render, or Railway.
+- Render deployment is supported via `backend/render.yaml`.
 - See `DEPLOYMENT.md` for setup commands and host-specific instructions.
