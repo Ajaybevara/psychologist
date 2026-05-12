@@ -4,7 +4,7 @@
         "email": "rajasekhar6105@gmail.com",
         "password": "$2b$12$sPiuyKuoCgF9oVndC1ZSJOiqwGkvvTrbsUKHsi8Ch7ISB/iXmgoDy",
         "createdAt": "2026-05-12 05:19:12.576164",
-        "lastLogin": "2026-05-12 06:28:54.517760",
+        "lastLogin": "2026-05-12 12:08:06.153330",
         "role": "admin",
         "profile": {
             "language": "en",
@@ -24,7 +24,7 @@
             "wellnessScore": 78,
             "favoriteActivities": []
         },
-        "lastLogout": "2026-05-12 11:21:36.925670"
+        "lastLogout": "2026-05-12 12:07:47.249558"
     },
     "naveenbevara@gmail.com": {
         "name": "naveen",
