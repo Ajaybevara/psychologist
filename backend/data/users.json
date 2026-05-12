@@ -17,7 +17,22 @@
         "email": "ajaybevara1@gmail.com",
         "password": "$2b$12$TvveaXV3E6IyNJp.zAnGVOSU/M/JaDZ6YH5REghuXTyJEbXdqjE4C",
         "createdAt": "2026-05-12 05:49:46.410388",
-        "lastLogin": "2026-05-12 06:02:37.618154",
+        "lastLogin": "2026-05-12 11:23:46.588040",
+        "role": "user",
+        "profile": {
+            "language": "en",
+            "wellnessScore": 78,
+            "favoriteActivities": []
+        },
+        "lastLogout": "2026-05-12 11:21:36.925670"
+    },
+    "naveenbevara@gmail.com": {
+        "name": "naveen",
+        "email": "naveenbevara@gmail.com",
+        "password": "$2b$12$S0gAfNFaCPhvRoQt0PXj1u1n/ZIxbBC4GquItQYavwKNsYhTQyQJC",
+        "createdAt": "2026-05-12 11:22:14.181744",
+        "lastLogin": null,
+        "lastLogout": "2026-05-12 11:23:26.297915",
         "role": "user",
         "profile": {
             "language": "en",

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { sendChat } from '../services/api'
+import { sendChat, getChatHistory } from '../services/api'
 import TypingDots from './TypingDots'
 import { PaperAirplaneIcon, SpeakerWaveIcon } from '@heroicons/react/24/solid'
 
@@ -26,6 +26,7 @@ export default function ChatPanel({ language }) {
   const [mood, setMood] = useState('neutral')
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [voices, setVoices] = useState([])
+  const [chatHistory, setChatHistory] = useState([])
   const messageEndRef = useRef(null)
 
   useEffect(() => {
@@ -37,6 +38,18 @@ export default function ChatPanel({ language }) {
       updateVoices()
       window.speechSynthesis.onvoiceschanged = updateVoices
     }
+  }, [])
+
+  useEffect(() => {
+    const fetchChatHistory = async () => {
+      try {
+        const { data } = await getChatHistory()
+        setChatHistory(data.history || [])
+      } catch (error) {
+        console.error('Failed to fetch chat history:', error)
+      }
+    }
+    fetchChatHistory()
   }, [])
 
   useEffect(() => {
@@ -71,6 +84,9 @@ export default function ChatPanel({ language }) {
     try {
       const { data } = await sendChat({ message: input, mood, language })
       setMessages((prev) => [...prev, { role: 'assistant', text: data.reply, sentiment: data.sentiment }])
+      // Refresh chat history after sending a message
+      const historyResponse = await getChatHistory()
+      setChatHistory(historyResponse.data.history || [])
     } catch (error) {
       console.error('Chat error:', error)
       const fallbackText = language === 'hi'
@@ -201,13 +217,26 @@ export default function ChatPanel({ language }) {
 
         <div className="space-y-4">
           <div className="card-glass p-5 rounded-3xl">
-            <h3 className="font-bold text-lg mb-3">💡 Quick Tips</h3>
-            <ul className="space-y-2 text-sm text-slate-300">
-              <li>• Be honest about your feelings</li>
-              <li>• Take breaks when needed</li>
-              <li>• Practice deep breathing</li>
-              <li>• Reach out to professionals</li>
-            </ul>
+            <h3 className="font-bold text-lg mb-3">� Chat History</h3>
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {chatHistory.length > 0 ? (
+                chatHistory.slice(0, 10).map((chat, idx) => (
+                  <div key={idx} className="bg-slate-800/50 p-3 rounded-xl">
+                    <p className="text-xs text-slate-400 mb-1">
+                      {new Date(chat.createdAt).toLocaleDateString()} - {chat.mood}
+                    </p>
+                    <p className="text-sm text-slate-300 truncate">
+                      <strong>You:</strong> {chat.message}
+                    </p>
+                    <p className="text-sm text-slate-300 truncate mt-1">
+                      <strong>MindCare:</strong> {chat.reply}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-slate-400">No chat history yet.</p>
+              )}
+            </div>
           </div>
           <div className="card-glass p-5 rounded-3xl">
             <h3 className="font-bold text-lg mb-3">🧘 I Can Help With</h3>

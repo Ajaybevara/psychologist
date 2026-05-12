@@ -14,7 +14,7 @@
         "mood": "neutral",
         "sentiment": "neutral",
         "language": "te",
-        "createdAt": "2026-05-12 05:50:30.553354"
+        "createdAt": "2026-05-12T05:50:30.553354"
     },
     {
         "email": "ajaybevara1@gmail.com",
@@ -23,7 +23,7 @@
         "mood": "happy",
         "sentiment": "positive",
         "language": "en",
-        "createdAt": "2026-05-12 06:03:21.818948"
+        "createdAt": "2026-05-12T06:03:21.818948"
     },
     {
         "email": "ajaybevara1@gmail.com",
@@ -32,7 +32,7 @@
         "mood": "neutral",
         "sentiment": "challenged",
         "language": "te",
-        "createdAt": "2026-05-12 06:04:54.853796"
+        "createdAt": "2026-05-12T06:04:54.853796"
     },
     {
         "email": "ajaybevara1@gmail.com",
@@ -41,7 +41,7 @@
         "mood": "neutral",
         "sentiment": "challenged",
         "language": "en",
-        "createdAt": "2026-05-12 06:27:25.954228"
+        "createdAt": "2026-05-12T06:27:25.954228"
     },
     {
         "email": "ajaybevara1@gmail.com",
@@ -50,7 +50,7 @@
         "mood": "neutral",
         "sentiment": "positive",
         "language": "te",
-        "createdAt": "2026-05-12 06:27:45.663860"
+        "createdAt": "2026-05-12T06:27:45.663860"
     },
     {
         "email": "rajasekhar6105@gmail.com",
@@ -60,5 +60,131 @@
         "sentiment": "challenged",
         "language": "en",
         "createdAt": "2026-05-12 06:29:33.321015"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "sad",
+        "reply": "I hear that you are feeling sad right now. Your feelings are real, and it is okay to feel this when life feels heavy.\n\nTry taking three slow breaths and naming one small thing that felt a little better today.\n\nIf you want, share more about what is weighing on you and I can help with a simple next step.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "language": "en",
+        "createdAt": "2026-05-12T09:02:08.115502"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "give me more",
+        "reply": "I am here to support you with kindness and practical care. Your experience matters, and it is okay to ask for help.\n\nDescribe one small thing you can do right now to feel a bit calmer or more grounded.\n\nSharing more will help me give you a better, more specific suggestion.",
+        "mood": "neutral",
+        "sentiment": "neutral",
+        "language": "en",
+        "createdAt": "2026-05-12T09:17:50.168313"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "bad",
+        "reply": "I am here to support you with kindness and practical care. Your experience matters, and it is okay to ask for help.\n\nDescribe one small thing you can do right now to feel a bit calmer or more grounded.\n\nSharing more will help me give you a better, more specific suggestion.",
+        "mood": "neutral",
+        "sentiment": "neutral",
+        "language": "en",
+        "createdAt": "2026-05-12T09:20:52.074146"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "stress",
+        "reply": "You seem stressed and under pressure. Stress can make everything feel heavier, even small tasks.\n\nTake a short break with slow breaths, drink some water, and remind yourself that one step at a time is enough.\n\nIt is okay to slow down and care for yourself right now.",
+        "mood": "calm",
+        "sentiment": "challenged",
+        "language": "en",
+        "createdAt": "2026-05-12T09:24:11.042720"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "happy",
+        "reply": "I am here to support you with kindness and practical care. Your experience matters, and it is okay to ask for help.\n\nDescribe one small thing you can do right now to feel a bit calmer or more grounded.\n\nSharing more will help me give you a better, more specific suggestion.",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-12T09:44:31.048172"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "hello",
+        "reply": "I am here to support you with kindness and practical care. Your experience matters, and it is okay to ask for help.\n\nDescribe one small thing you can do right now to feel a bit calmer or more grounded.\n\nSharing more will help me give you a better, more specific suggestion.",
+        "mood": "neutral",
+        "sentiment": "neutral",
+        "language": "en",
+        "createdAt": "2026-05-12T09:49:34.039718"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "happy",
+        "reply": "I am here to support you with kindness and practical care. Your experience matters, and it is okay to ask for help.\n\nDescribe one small thing you can do right now to feel a bit calmer or more grounded.\n\nSharing more will help me give you a better, more specific suggestion.",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-12T09:49:39.412493"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "sad",
+        "reply": "I hear that you are feeling sad right now. Your feelings are real, and it is okay to feel this when life feels heavy.\n\nTry taking three slow breaths and naming one small thing that felt a little better today.\n\nIf you want, share more about what is weighing on you and I can help with a simple next step.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "language": "en",
+        "createdAt": "2026-05-12T09:51:28.974405"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "sad",
+        "reply": "I hear that you are feeling sad right now. Your feelings are real, and it is okay to feel this when life feels heavy.\n\nTry taking three slow breaths and naming one small thing that felt a little better today.\n\nIf you want, share more about what is weighing on you and I can help with a simple next step.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "language": "en",
+        "createdAt": "2026-05-12T09:51:59.317780"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "sad",
+        "reply": "I hear that you are feeling sad right now. Your feelings are real, and it is okay to feel this when life feels heavy.\n\nTry taking three slow breaths and naming one small thing that felt a little better today.\n\nIf you want, share more about what is weighing on you and I can help with a simple next step.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "language": "en",
+        "createdAt": "2026-05-12T10:03:11.106207"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "happy",
+        "reply": "I am listening, and I want to help you feel a little steadier in this moment. Your experience matters, and it is okay to ask for help.\n\nTry one simple step to reconnect with what feels safe, such as breathing slowly or taking a short walk.\n\nIf you share one detail of what you are feeling, I can guide you more clearly.",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-12T10:17:08.936409"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "happy",
+        "reply": "I am here to support you with kindness and practical care. This moment is important, and your feelings deserve attention.\n\nDescribe one small thing you can do right now to feel a bit calmer or more grounded.\n\nSharing more will help me give you a better, more specific suggestion.",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-12T10:49:48.614092"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "happy",
+        "reply": "You are not alone in this, and I am here to help with a calm response. It makes sense to feel uncertain right now, and that feeling is valid.\n\nTry one simple step to reconnect with what feels safe, such as breathing slowly or taking a short walk.\n\nTell me a little more and I can offer a practical next step that fits your situation.",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-12 11:13:36.041195"
+    },
+    {
+        "email": "naveenbevara@gmail.com",
+        "message": "sad",
+        "reply": "Feeling sad is a real emotion. Validating it, reaching out to someone you trust, and doing one gentle self-care activity can help even a little.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "language": "en",
+        "createdAt": "2026-05-12 11:22:24.209024"
     }
 ]

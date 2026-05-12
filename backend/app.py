@@ -1,5 +1,7 @@
 import os
+import re
 import json
+import random
 import bcrypt
 import jwt
 import datetime
@@ -14,6 +16,7 @@ load_dotenv()
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'supersecret')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
 PASSWORD_RESET_TOKEN_EXPIRY_HOURS = int(os.getenv('PASSWORD_RESET_TOKEN_EXPIRY_HOURS', '1'))
 
 openai.api_key = OPENAI_API_KEY
@@ -121,10 +124,26 @@ RESPONSE_TEMPLATES = {
             'support': 'Notice how your body responds, and allow yourself to respond without judgment.'
         },
         'general': {
-            'opening': 'I am here to support you with kindness and practical care.',
-            'validate': 'Your experience matters, and it is okay to ask for help.',
-            'action': 'Describe one small thing you can do right now to feel a bit calmer or more grounded.',
-            'support': 'Sharing more will help me give you a better, more specific suggestion.'
+            'opening': [
+                'I am here to support you with kindness and practical care.',
+                'I am listening, and I want to help you feel a little steadier in this moment.',
+                'You are not alone in this, and I am here to help with a calm response.'
+            ],
+            'validate': [
+                'Your experience matters, and it is okay to ask for help.',
+                'It makes sense to feel uncertain right now, and that feeling is valid.',
+                'This moment is important, and your feelings deserve attention.'
+            ],
+            'action': [
+                'Describe one small thing you can do right now to feel a bit calmer or more grounded.',
+                'Try one simple step to reconnect with what feels safe, such as breathing slowly or taking a short walk.',
+                'Notice one thing in the room around you and name it silently to help the mind settle.'
+            ],
+            'support': [
+                'Sharing more will help me give you a better, more specific suggestion.',
+                'Tell me a little more and I can offer a practical next step that fits your situation.',
+                'If you share one detail of what you are feeling, I can guide you more clearly.'
+            ]
         }
     },
     'hi': {
@@ -281,14 +300,232 @@ def choose_response_topic(text):
     return 'general'
 
 
+FAQ_RESPONSES = {
+    'stressed': 'Stress can feel overwhelming sometimes. Try focusing on one small task at a time and give yourself short breaks to relax.',
+    'stress': 'Stress can feel overwhelming sometimes. Try focusing on one small task at a time and give yourself short breaks to relax.',
+    'cannot sleep': 'Sleep problems are common during stress. Reducing screen time before bed and keeping a calm routine may help.',
+    'sleep properly': 'Sleep problems are common during stress. Reducing screen time before bed and keeping a calm routine may help.',
+    'sleep issues': 'Sleep problems are common during stress. Reducing screen time before bed and keeping a calm routine may help.',
+    'nervous': 'Feeling nervous can happen during uncertain situations. Slow breathing and grounding techniques may help calm your mind.',
+    'worried about my future': 'Many people worry about the future. Try focusing on what you can control today rather than everything at once.',
+    'panic before exams': 'Exam pressure is common. Preparing step-by-step and taking regular breaks can help reduce panic.',
+    'panic': 'Exam pressure is common. Preparing step-by-step and taking regular breaks can help reduce panic.',
+    'overthink': 'Overthinking can be exhausting. Writing down your thoughts may help organize them more clearly.',
+    'pressure from everyone': 'Too much pressure can feel heavy. Remember that your well-being is also important.',
+    'mentally tired': 'Mental exhaustion can happen after continuous stress. Taking rest and doing calming activities may help recharge you.',
+    'afraid of failure': 'Failure is a part of learning and growth. Every experience can teach something valuable.',
+    'anxious in social situations': 'Social anxiety is more common than many people realize. Small social interactions can help build confidence gradually.',
+    'sad today': 'I’m sorry you’re feeling sad. Sometimes sharing your feelings with someone supportive can help lighten the emotional load.',
+    'lonely': 'Loneliness can feel difficult. Connecting with a trusted person or joining activities you enjoy may help.',
+    'nobody understands me': 'Feeling misunderstood can hurt. Your feelings are still important and deserve to be heard.',
+    'cry easily': 'Crying is a natural emotional response and can sometimes help release stress.',
+    'empty inside': 'Feeling emotionally empty can happen during stressful periods. Small routines and meaningful activities may help slowly reconnect you.',
+    'miss someone': 'Missing someone deeply is natural when they matter to you. Memories and support from others can help during that time.',
+    'feel ignored': 'Feeling ignored can be painful. Your thoughts and emotions still matter.',
+    'emotionally weak': 'Everyone has emotionally difficult moments. Reaching out for support can be a strong step.',
+    'disappointed in myself': 'Disappointment happens to everyone sometimes. One difficult moment does not define your worth.',
+    'giving up on my goals': 'Goals can feel hard during stressful times. Taking one small step at a time may make things feel more manageable.',
+    'low confidence': 'Confidence usually grows slowly through practice, learning, and small achievements.',
+    'compare myself': 'Comparing yourself constantly can hurt your confidence. Everyone progresses differently.',
+    'not good enough': 'Your value is not decided by one mistake or one difficult period.',
+    'insecure': 'Insecurity is common. Focusing on your strengths and progress may help build confidence gradually.',
+    'shy around people': 'Shyness is normal for many people. Small conversations can slowly improve comfort levels.',
+    'lack motivation': 'Motivation can come and go. Starting with one small task can help rebuild momentum.',
+    'fear public speaking': 'Public speaking anxiety is common. Practice and preparation can help reduce fear over time.',
+    'doubt my abilities': 'Self-doubt happens to many people, especially during challenges. Remember your past achievements too.',
+    'behind in life': 'Everyone’s journey is different. Progress does not need to happen at the same speed for everyone.',
+    'unattractive': 'Self-worth is much more than appearance. Your personality, skills, and kindness matter too.',
+    'get angry quickly': 'Strong emotions can build up during stress. Taking a pause before reacting may help.',
+    'regret things i said': 'Many people regret emotional reactions. Reflecting and apologizing when needed can help repair situations.',
+    'frustrated': 'Frustration often comes from blocked goals or stress. Taking a short break may help clear your mind.',
+    'cannot control my emotions': 'Emotions can feel intense sometimes. Slowing down and identifying the feeling may help manage it better.',
+    'irritated all the time': 'Continuous irritation may happen during exhaustion or stress. Proper rest and relaxation can help.',
+    'friends avoid me': 'Relationship changes can feel painful. Honest communication may help clarify misunderstandings.',
+    'had a fight': 'Conflicts happen in relationships. Calm conversations later can sometimes improve understanding.',
+    'left out': 'Feeling excluded can hurt emotionally. Finding supportive people and activities may help.',
+    'do not trust people': 'Trust often develops gradually through consistent and respectful interactions.',
+    'awkward in conversations': 'Social awkwardness is common. Practice and patience usually improve communication skills.',
+    'stressed about exams': 'Exam stress is common. A balanced study plan and proper rest may help improve focus.',
+    'fear failing my exams': 'Fear of failure can increase pressure. Focus on preparation rather than perfection.',
+    'cannot concentrate on studies': 'Distractions and stress can affect concentration. Short focused study sessions may help.',
+    'confused about my career': 'Career confusion is common during learning stages. Exploring interests and skills may help guide decisions.',
+    'pressure to succeed': 'Success pressure can become exhausting. Your health and well-being are also important.',
+    'want to improve myself': 'Self-improvement starts with small consistent habits and patience with yourself.',
+    'procrastinate': 'Breaking tasks into smaller steps may make them easier to start.',
+    'lose focus quickly': 'Short breaks and reducing distractions can sometimes improve focus.',
+    'want to become mentally stronger': 'Mental strength grows through learning, resilience, and healthy coping habits.',
+    'want a positive mindset': 'Positive thinking often develops through gratitude, healthy routines, and self-care.',
+    'feel confused': 'Taking time to think calmly may help organize your thoughts.',
+    'feel tired emotionally': 'Emotional exhaustion can improve with rest and support.',
+    'feel alone': 'You deserve connection and support.',
+    'afraid of judgment': 'Many people worry about judgment sometimes.',
+    'pressured by expectations': 'Balancing expectations and self-care is important.',
+    'feel hopeless': 'Difficult feelings can change with time and support.',
+    'homesick': 'Missing familiar people and places is natural.',
+    'distracted easily': 'Short focused sessions may help improve attention.',
+    'embarrassed often': 'Everyone experiences awkward moments sometimes.',
+    'nervous speaking in class': 'Practice and preparation can build confidence.',
+    'mentally blocked': 'Taking a break may help refresh your thinking.',
+    'uncomfortable around strangers': 'Social comfort often improves gradually.',
+    'exhausted from responsibilities': 'Rest and balance are important too.',
+    'emotionally sensitive': 'Sensitivity can also reflect empathy and awareness.',
+    'fear rejection': 'Rejection can hurt, but it does not define your worth.',
+    'worry too much': 'Focusing on what you can control may help.',
+    'insecure about my future': 'Uncertainty is part of growth and learning.',
+    'struggle with discipline': 'Building routines slowly can help improve discipline.',
+    'unproductive': 'Small progress still counts.',
+    'emotionally disconnected': 'Meaningful activities and support may help reconnect you.',
+    'weak mentally': 'Everyone has difficult emotional periods.',
+    'scared of change': 'Change can feel uncomfortable at first.',
+    'trapped by responsibilities': 'Taking small breaks can sometimes reduce pressure.',
+    'worried constantly': 'Constant worry can become exhausting.',
+    'pressure from family': 'Family expectations can sometimes feel overwhelming.',
+    'emotionally confused': 'Understanding emotions takes time.',
+    'guilty often': 'Learning from mistakes is more important than constant guilt.',
+    'emotionally overwhelmed': 'Slowing down and resting may help.',
+    'disconnected from friends': 'Communication may help rebuild connection.',
+    'fear making mistakes': 'Mistakes are part of learning.',
+    'discouraged': 'Temporary setbacks do not erase your progress.',
+    'shy expressing feelings': 'Opening up gradually can help.',
+    'pressure to be perfect': 'Perfection is unrealistic for everyone.',
+    'nervous meeting new people': 'That feeling is very common.',
+    'drained after social events': 'Taking quiet time afterward may help recharge.',
+    'mentally overloaded': 'Organizing tasks step-by-step may reduce stress.',
+    'emotionally unstable': 'Strong emotions can happen during stressful periods.',
+    'uncomfortable with criticism': 'Constructive feedback can support growth.',
+    'restless': 'Physical activity or breathing exercises may help.',
+    'emotionally distant': 'Stress can sometimes affect emotional connection.',
+    'impatient': 'Patience often improves with practice and awareness.',
+    'anxious at night': 'Relaxation routines may help calm nighttime anxiety.',
+    'worried about others’ opinions': 'Your value is not based only on others’ views.',
+    'mentally exhausted from studying': 'Rest and healthy breaks are important.',
+    'emotionally unsupported': 'Supportive conversations can make a difference.',
+    'nervous before interviews': 'Preparation and practice may improve confidence.',
+    'afraid to try again': 'Trying again after setbacks takes courage.',
+    'emotionally stuck': 'Small changes in routine may help create movement.',
+    'disconnected from myself': 'Self-reflection and rest may help reconnect you.',
+    'emotionally overwhelmed by life': 'Taking one step at a time may make things feel more manageable.'
+}
+
+
+FAQ_PATTERNS = [
+    (re.compile(r'\b(stress|stressed|overwhelmed|pressure|exam stress|exam pressure|burnout)\b'),
+     'Stress is difficult, but small steps like breathing breaks, naming the feeling, and doing one manageable task can help you feel more grounded.'),
+    (re.compile(r'\b(anxiety|anxious|panic|worry|worried)\b'),
+     'Anxiety often comes from feeling unsafe or out of control. Try grounding with your senses and focusing on one small action you can take right now.'),
+    (re.compile(r'\b(not myself|dont feel like myself|don t feel like myself|feel unlike myself|feel different)\b'),
+     'Feeling unlike yourself can be unsettling. Try noticing one small thing that feels familiar or comforting, and reach out to someone you trust if you can.'),
+    (re.compile(r'\b(sad|sadness|depressed|down|hopeless|empty)\b'),
+     'Feeling sad is a real emotion. Validating it, reaching out to someone you trust, and doing one gentle self-care activity can help even a little.'),
+    (re.compile(r'\b(lonely|alone|isolated|left out)\b'),
+     'Loneliness can feel heavy. Connecting with someone safe, even briefly, or doing a comforting routine may help you feel less alone.'),
+    (re.compile(r'\b(motivation|motivated|drive|energy|purpose)\b'),
+     'Motivation often returns after a small start. Choose one tiny action to begin with and reward yourself for simply showing up.'),
+    (re.compile(r'\b(confidence|confident|self\s*esteem|worth|insecure|not good enough)\b'),
+     'Confidence is built slowly. Notice one thing you did well today and remind yourself it is okay to learn from mistakes.'),
+    (re.compile(r'\b(sleep|insomnia|cannot sleep|trouble sleeping|restless night)\b'),
+     'Sleep problems are common. Try a consistent wind-down routine and limit screen time before bed to help your mind relax.'),
+    (re.compile(r'\b(relationship|partner|family|friend|friendship|communication|trust|fight|argument)\b'),
+     'Relationships can be hard. Focus on honest listening, respectful boundaries, and sharing how you feel without blaming yourself.'),
+    (re.compile(r'\b(study|exam|test|homework|school|college|career)\b'),
+     'Academic pressure is stressful. Break work into small pieces, make a simple plan, and take short breaks so you do not burn out.'),
+]
+
+
+def normalize_message_text(message):
+    normalized = message.lower().replace("'", '').replace('’', '')
+    normalized = re.sub(r'[^a-z0-9\s]', ' ', normalized)
+    normalized = re.sub(r'\s+', ' ', normalized).strip()
+    return normalized
+
+
+def match_exact_response(message):
+    normalized = normalize_message_text(message)
+    for keyword, answer in FAQ_RESPONSES.items():
+        if normalize_message_text(keyword) in normalized:
+            return answer
+    for pattern, answer in FAQ_PATTERNS:
+        if pattern.search(normalized):
+            return answer
+    return None
+
+
+def get_conversation_messages(current_user, limit=5):
+    user_chats = [chat for chat in chats_data if chat.get('email') == current_user['email']]
+    sorted_chats = sorted(user_chats, key=lambda x: x['createdAt'], reverse=True)[:limit]
+    messages = []
+    for chat in reversed(sorted_chats):
+        messages.append({'role': 'user', 'content': chat['message']})
+        messages.append({'role': 'assistant', 'content': chat['reply']})
+    return messages
+
+
+def get_recent_chat_history(current_user, limit=5):
+    user_chats = [chat for chat in chats_data if chat.get('email') == current_user['email']]
+    sorted_chats = sorted(user_chats, key=lambda x: x['createdAt'], reverse=True)[:limit]
+    history_lines = []
+    for chat in reversed(sorted_chats):
+        history_lines.append(f"User: {chat['message']}")
+        history_lines.append(f"Assistant: {chat['reply']}")
+    return '\n'.join(history_lines)
+
+
+def choose_text_variant(value):
+    if isinstance(value, list):
+        return random.choice(value)
+    return value
+
+
 def generate_local_response(message, mood, language):
+    exact_response = match_exact_response(message)
+    if exact_response:
+        return exact_response
+
+    normalized = normalize_message_text(message)
     topic = choose_response_topic(message)
     messages = RESPONSE_TEMPLATES.get(language, RESPONSE_TEMPLATES['en'])
     template = messages.get(topic, messages['general'])
+    opening = choose_text_variant(template.get('opening'))
+    validate = choose_text_variant(template.get('validate'))
+    action = choose_text_variant(template.get('action'))
+    support = choose_text_variant(template.get('support'))
+
+    repeated_note = ''
+    if any(word in normalized for word in ['same', 'again', 'repeat']):
+        repeated_note = ' I hear that you are asking again, so I am sharing a fresh way to say this.'
+
+    extra_detail = ''
+    if topic == 'general' and len(normalized.split()) <= 6:
+        extra_detail = ' If you can share one more sentence, I can give you a more exact suggestion.'
+
     return (
-        f"{template['opening']} {template['validate']}\n\n"
-        f"{template['action']}\n\n"
-        f"{template['support']}"
+        f"{opening} {validate}{repeated_note}\n\n"
+        f"{action}\n\n"
+        f"{support}{extra_detail}"
+    )
+
+
+def build_ai_prompt(message, mood, language, history=''):
+    language_name = SUPPORTED_LANGUAGES.get(language, 'English')
+    repeated_note = ''
+    if history and message.strip().lower() in history.lower():
+        repeated_note = (
+            'The user is repeating the same request or question. Answer with a fresh explanation, use different wording, '
+            'and keep the response tightly focused on the user request. '
+        )
+    history_block = f"\n\nRecent conversation history:\n{history}\n" if history else ''
+    return (
+        f"You are a compassionate, professional psychologist assistant specializing in CBT (Cognitive Behavioral Therapy). "
+        f"Respond in {language_name}. Use simple, clear language and short sentences. "
+        f"Focus only on the user’s current message and recent chat history. Do not include unrelated advice or generic small talk. "
+        f"Always answer based on the user’s exact request and the emotional keywords they used. "
+        f"If the request matches a known topic such as stress, sleep, anxiety, sadness, loneliness, exam pressure, motivation, confidence, or relationships, answer that topic directly. "
+        f"Validate the user’s feeling, summarize what they said, and give one practical next step. "
+        f"Use the recent conversation history when it helps keep the response consistent. "
+        f"{repeated_note}{history_block}"
+        f"The user's current mood is {mood}. "
+        f"User message: {message}. "
+        f"Write a helpful answer in {language_name}."
     )
 
 
@@ -307,22 +544,6 @@ def sentiment_from_text(text):
     if any(word in text_lower for word in ['happy', 'calm', 'good', 'grateful', 'motivated']):
         return 'positive'
     return 'neutral'
-
-
-def build_ai_prompt(message, mood, language):
-    language_name = SUPPORTED_LANGUAGES.get(language, 'English')
-    return (
-        f"You are a compassionate, professional psychologist assistant specializing in CBT (Cognitive Behavioral Therapy). "
-        f"Respond in {language_name}. Use simple, clear language and short sentences. "
-        f"Validate the user's feelings, summarize their concern, and offer one practical coping step. "
-        f"If the user mentions stress, anxiety, sadness, or sleep difficulty, include one calming breathing exercise, self-compassion phrase, or grounding strategy. "
-        f"Format answers with an empathetic opening, a clear explanation, and one gentle action step. "
-        f"Use bullet points or numbered items only if that makes the response easier to follow. "
-        f"If the user asks for mood support, respond with reassurance and a useful next step. "
-        f"The user's current mood is {mood}. "
-        f"User message: {message}. "
-        f"Write a helpful answer in {language_name}."
-    )
 
 
 @app.route('/api/auth/register', methods=['POST'])
@@ -481,15 +702,24 @@ def chat(current_user):
     requested_language = normalize_language(data.get('language') or current_user.get('profile', {}).get('language', 'en'))
     sentiment = sentiment_from_text(message)
     reply = None
+    history = get_recent_chat_history(current_user, limit=5)
 
     if OPENAI_ENABLED:
         try:
-            prompt = build_ai_prompt(message, mood, requested_language)
+            prompt = build_ai_prompt(message, mood, requested_language, history=history)
+            conversation_messages = get_conversation_messages(current_user, limit=5)
             response = openai.ChatCompletion.create(
-                model='gpt-4o-mini',
-                messages=[{'role': 'system', 'content': prompt}, {'role': 'user', 'content': message}],
-                max_tokens=260,
-                temperature=0.7
+                model=OPENAI_MODEL,
+                messages=[
+                    {'role': 'system', 'content': prompt},
+                    *conversation_messages,
+                    {'role': 'user', 'content': message}
+                ],
+                max_tokens=300,
+                temperature=0.75,
+                top_p=0.85,
+                frequency_penalty=0.3,
+                presence_penalty=0.1
             )
             reply = response.choices[0].message.content.strip()
         except Exception:
@@ -514,6 +744,16 @@ def chat(current_user):
         'language': requested_language,
         'recommendation': CATEGORY_STEPS.get('breathing')
     })
+
+
+@app.route('/api/chat/history', methods=['GET'])
+@token_required
+def chat_history(current_user):
+    user_chats = [chat for chat in chats_data if chat.get('email') == current_user['email']]
+    sorted_chats = sorted(user_chats, key=lambda x: x['createdAt'], reverse=True)
+    for chat in sorted_chats:
+        chat['createdAt'] = chat['createdAt'].isoformat()
+    return jsonify({'history': sorted_chats})
 
 
 @app.route('/api/wellness', methods=['GET'])
