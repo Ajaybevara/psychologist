@@ -1,0 +1,28 @@
+{
+    "rajasekhar6105@gmail.com": {
+        "name": "rajasekhar",
+        "email": "rajasekhar6105@gmail.com",
+        "password": "$2b$12$sPiuyKuoCgF9oVndC1ZSJOiqwGkvvTrbsUKHsi8Ch7ISB/iXmgoDy",
+        "createdAt": "2026-05-12 05:19:12.576164",
+        "lastLogin": "2026-05-12 06:28:54.517760",
+        "role": "admin",
+        "profile": {
+            "language": "en",
+            "wellnessScore": 78,
+            "favoriteActivities": []
+        }
+    },
+    "ajaybevara1@gmail.com": {
+        "name": "ajay",
+        "email": "ajaybevara1@gmail.com",
+        "password": "$2b$12$TvveaXV3E6IyNJp.zAnGVOSU/M/JaDZ6YH5REghuXTyJEbXdqjE4C",
+        "createdAt": "2026-05-12 05:49:46.410388",
+        "lastLogin": "2026-05-12 06:02:37.618154",
+        "role": "user",
+        "profile": {
+            "language": "en",
+            "wellnessScore": 78,
+            "favoriteActivities": []
+        }
+    }
+}

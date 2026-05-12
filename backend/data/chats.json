@@ -1,0 +1,64 @@
+[
+    {
+        "email": "rajasekhar6105@gmail.com",
+        "message": "very sad",
+        "reply": "I hear you. Let us explore how you are feeling and what small steps can help right now.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "createdAt": "2026-05-12 05:19:41.262490"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "hello",
+        "reply": "\u0c28\u0c47\u0c28\u0c41 \u0c2e\u0c40 \ub9d0\uc744 \u0c35\u0c3f\u0c28\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41. \u0c2e\u0c40\u0c30\u0c41 \u0c2e\u0c40 \u0c0a\u0c2a\u0c3f\u0c30\u0c3f\u0c28\u0c3f \u0c06\u0c32\u0c4b\u0c1a\u0c3f\u0c02\u0c1a\u0c3f \u0c24\u0c40\u0c38\u0c41\u0c15\u0c4b\u0c02\u0c21\u0c3f. \u0c28\u0c47\u0c21\u0c41 \u0c28\u0c47\u0c28\u0c41 \u0c2e\u0c40\u0c15\u0c41 \u0c38\u0c39\u0c3e\u0c2f\u0c02 \u0c1a\u0c47\u0c2f\u0c21\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c07\u0c26\u0c3f\u0c17\u0c4b \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41.",
+        "mood": "neutral",
+        "sentiment": "neutral",
+        "language": "te",
+        "createdAt": "2026-05-12 05:50:30.553354"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "happy",
+        "reply": "I hear you. Please take a slow breath. I am here and want to help you.",
+        "mood": "happy",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-12 06:03:21.818948"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "nenu chala sad ga feel avutunnanu",
+        "reply": "\u0c28\u0c47\u0c28\u0c41 \u0c2e\u0c40 \ub9d0\uc744 \u0c35\u0c3f\u0c28\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41. \u0c2e\u0c40\u0c30\u0c41 \u0c2e\u0c40 \u0c0a\u0c2a\u0c3f\u0c30\u0c3f\u0c28\u0c3f \u0c06\u0c32\u0c4b\u0c1a\u0c3f\u0c02\u0c1a\u0c3f \u0c24\u0c40\u0c38\u0c41\u0c15\u0c4b\u0c02\u0c21\u0c3f. \u0c28\u0c47\u0c21\u0c41 \u0c28\u0c47\u0c28\u0c41 \u0c2e\u0c40\u0c15\u0c41 \u0c38\u0c39\u0c3e\u0c2f\u0c02 \u0c1a\u0c47\u0c2f\u0c21\u0c3e\u0c28\u0c3f\u0c15\u0c3f \u0c07\u0c26\u0c3f\u0c17\u0c4b \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "language": "te",
+        "createdAt": "2026-05-12 06:04:54.853796"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "very sad",
+        "reply": "I hear that you are feeling sad right now. Your feelings are real, and it is okay to feel this when life feels heavy.\n\nTry taking three slow breaths and naming one small thing that felt a little better today.\n\nIf you want, share more about what is weighing on you and I can help with a simple next step.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "language": "en",
+        "createdAt": "2026-05-12 06:27:25.954228"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "happy",
+        "reply": "\u0c28\u0c47\u0c28\u0c41 \u0c2e\u0c40\u0c15\u0c41 \u0c2e\u0c26\u0c4d\u0c26\u0c24\u0c41\u0c17\u0c3e \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41. \u0c2e\u0c40 \u0c05\u0c28\u0c41\u0c2d\u0c35\u0c02 \u0c2e\u0c41\u0c16\u0c4d\u0c2f\u0c2e\u0c48\u0c28\u0c26\u0c3f \u0c2e\u0c30\u0c3f\u0c2f\u0c41 \u0c2e\u0c40 \u0c2d\u0c3e\u0c35\u0c3e\u0c32\u0c41 \u0c38\u0c30\u0c48\u0c28\u0c35\u0c3f.\n\n\u0c07\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c47 \u0c2e\u0c40\u0c15\u0c41 \u0c12\u0c15 \u0c2e\u0c02\u0c1a\u0c3f \u0c35\u0c3f\u0c37\u0c2f\u0c02 \u0c17\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c3f \u0c1a\u0c46\u0c2a\u0c4d\u0c2a\u0c02\u0c21\u0c3f.\n\n\u0c2e\u0c30\u0c3f\u0c28\u0c4d\u0c28\u0c3f \u0c35\u0c3f\u0c35\u0c30\u0c3e\u0c32\u0c41 \u0c10\u0c24\u0c47, \u0c28\u0c47\u0c28\u0c41 \u0c2e\u0c40\u0c30\u0c41 \u0c15\u0c4b\u0c38\u0c02 \u0c2e\u0c30\u0c3f\u0c02\u0c24 \u0c38\u0c39\u0c3e\u0c2f\u0c15\u0c30\u0c02\u0c17\u0c3e \u0c09\u0c02\u0c21\u0c17\u0c32\u0c28\u0c41.",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "te",
+        "createdAt": "2026-05-12 06:27:45.663860"
+    },
+    {
+        "email": "rajasekhar6105@gmail.com",
+        "message": "very sad",
+        "reply": "I hear that you are feeling sad right now. Your feelings are real, and it is okay to feel this when life feels heavy.\n\nTry taking three slow breaths and naming one small thing that felt a little better today.\n\nIf you want, share more about what is weighing on you and I can help with a simple next step.",
+        "mood": "neutral",
+        "sentiment": "challenged",
+        "language": "en",
+        "createdAt": "2026-05-12 06:29:33.321015"
+    }
+]

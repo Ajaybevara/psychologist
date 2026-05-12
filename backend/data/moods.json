@@ -1,0 +1,20 @@
+[
+    {
+        "email": "rajasekhar6105@gmail.com",
+        "mood": "calm",
+        "note": "",
+        "createdAt": "2026-05-12 05:20:52.052960"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "mood": "stressed",
+        "note": "stressed",
+        "createdAt": "2026-05-12T06:03:54.289418"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "mood": "lonely",
+        "note": "",
+        "createdAt": "2026-05-12 06:28:10.930838"
+    }
+]

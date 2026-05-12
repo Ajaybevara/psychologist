@@ -1,0 +1,9 @@
+flask
+flask-cors
+python-dotenv
+bcrypt
+pyjwt
+requests
+openai
+python-dateutil
+gunicorn
