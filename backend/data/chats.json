@@ -194,7 +194,7 @@
         "mood": "neutral",
         "sentiment": "positive",
         "language": "hi",
-        "createdAt": "2026-05-12 12:06:23.553224"
+        "createdAt": "2026-05-12T12:06:23.553224"
     },
     {
         "email": "rajasekhar6105@gmail.com",
@@ -203,6 +203,42 @@
         "mood": "neutral",
         "sentiment": "challenged",
         "language": "te",
-        "createdAt": "2026-05-12 12:08:41.139163"
+        "createdAt": "2026-05-12T12:08:41.139163"
+    },
+    {
+        "email": "rajasekhar6105@gmail.com",
+        "message": "happy",
+        "reply": "I am here to support you with kindness and practical care. It makes sense to feel uncertain right now, and that feeling is valid.\n\nNotice one thing in the room around you and name it silently to help the mind settle.\n\nIf you share one detail of what you are feeling, I can guide you more clearly. If you can share one more sentence, I can give you a more exact suggestion.",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-13T04:55:38.947529"
+    },
+    {
+        "email": "rajasekhar6105@gmail.com",
+        "message": "happpy",
+        "reply": "\u092e\u0948\u0902 \u0906\u092a\u0915\u0940 \u0938\u0939\u093e\u092f\u0924\u093e \u0915\u0947 \u0932\u093f\u090f \u092f\u0939\u093e\u0901 \u0939\u0942\u0901\u0964 \u0906\u092a\u0915\u0940 \u0938\u094d\u0925\u093f\u0924\u093f \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0939\u0948 \u0914\u0930 \u0906\u092a\u0915\u0940 \u092d\u093e\u0935\u0928\u093e\u090f\u0901 \u0909\u091a\u093f\u0924 \u0939\u0948\u0902\u0964\n\n\u0915\u0943\u092a\u092f\u093e \u090f\u0915 \u091b\u094b\u091f\u0940 \u0938\u0940 \u0905\u091a\u094d\u091b\u0940 \u092c\u093e\u0924 \u0932\u093f\u0916\u0947\u0902 \u091c\u094b \u0906\u091c \u0906\u092a\u0915\u0947 \u0926\u093f\u0928 \u092e\u0947\u0902 \u0906\u0908 \u0939\u094b\u0964\n\n\u0914\u0930 \u092c\u0924\u093e\u0907\u090f, \u0924\u093e\u0915\u093f \u092e\u0948\u0902 \u0906\u092a\u0915\u094b \u0914\u0930 \u092c\u0947\u0939\u0924\u0930 \u0938\u0932\u093e\u0939 \u0926\u0947 \u0938\u0915\u0942\u0901\u0964 \u0906\u0930\u093e\u092e \u0938\u0947 \u0930\u0939\u0947\u0902, \u091c\u092c \u0906\u092a \u0914\u0930 \u092c\u0924\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0924\u0948\u092f\u093e\u0930 \u0939\u094b\u0902, \u0924\u094b \u092e\u0948\u0902 \u092f\u0939\u0940\u0902 \u0939\u0942\u0901\u0964",
+        "mood": "neutral",
+        "sentiment": "neutral",
+        "language": "hi",
+        "createdAt": "2026-05-13T05:08:58.244310"
+    },
+    {
+        "email": "ajaybevara1@gmail.com",
+        "message": "happy happy",
+        "reply": "I am listening, and I want to help you feel a little steadier in this moment. This moment is important, and your feelings deserve attention.\n\nNotice one thing in the room around you and name it silently to help the mind settle.\n\nIf you share one detail of what you are feeling, I can guide you more clearly. Can you tell me a bit more about what brought this on?",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-13T05:38:33.199572"
+    },
+    {
+        "email": "rajasekhar6105@gmail.com",
+        "message": "happy",
+        "reply": "You are not alone in this, and I am here to help with a calm response. Your experience matters, and it is okay to ask for help. I notice you are asking about this again, so let us try looking at it slightly differently.\n\nTry one simple step to reconnect with what feels safe, such as breathing slowly or taking a short walk.\n\nSharing more will help me give you a better, more specific suggestion. Can you tell me a bit more about what brought this on?",
+        "mood": "neutral",
+        "sentiment": "positive",
+        "language": "en",
+        "createdAt": "2026-05-13 06:32:43.942767"
     }
 ]

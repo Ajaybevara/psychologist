@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard'
 import ChatPanel from './components/ChatPanel'
 import MoodTracker from './components/MoodTracker'
 import WellnessTools from './components/WellnessTools'
+import JournalPanel from './components/JournalPanel'
 import AdminPanel from './components/AdminPanel'
 import Sidebar from './components/Sidebar'
 
@@ -48,6 +49,7 @@ function AppContent() {
               <Route path="/" element={user ? <Dashboard language={language} /> : <Navigate to="/auth/login" />} />
               <Route path="/chat" element={user ? <ChatPanel language={language} /> : <Navigate to="/auth/login" />} />
               <Route path="/mood" element={user ? <MoodTracker language={language} /> : <Navigate to="/auth/login" />} />
+              <Route path="/journal" element={user ? <JournalPanel /> : <Navigate to="/auth/login" />} />
               <Route path="/tools" element={user ? <WellnessTools /> : <Navigate to="/auth/login" />} />
               <Route path="/admin" element={user ? <AdminPanel /> : <Navigate to="/auth/login" />} />
               <Route path="*" element={<Navigate to={user ? '/' : '/auth/login'} />} />

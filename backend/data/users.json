@@ -4,27 +4,28 @@
         "email": "rajasekhar6105@gmail.com",
         "password": "$2b$12$sPiuyKuoCgF9oVndC1ZSJOiqwGkvvTrbsUKHsi8Ch7ISB/iXmgoDy",
         "createdAt": "2026-05-12 05:19:12.576164",
-        "lastLogin": "2026-05-12 12:08:06.153330",
+        "lastLogin": "2026-05-13 06:32:14.254990",
         "role": "admin",
         "profile": {
             "language": "en",
             "wellnessScore": 78,
             "favoriteActivities": []
-        }
+        },
+        "lastLogout": "2026-05-13 05:12:26.248832"
     },
     "ajaybevara1@gmail.com": {
         "name": "ajay",
         "email": "ajaybevara1@gmail.com",
         "password": "$2b$12$TvveaXV3E6IyNJp.zAnGVOSU/M/JaDZ6YH5REghuXTyJEbXdqjE4C",
         "createdAt": "2026-05-12 05:49:46.410388",
-        "lastLogin": "2026-05-12 11:23:46.588040",
+        "lastLogin": "2026-05-13 05:38:05.904670",
         "role": "user",
         "profile": {
             "language": "en",
             "wellnessScore": 78,
             "favoriteActivities": []
         },
-        "lastLogout": "2026-05-12 12:07:47.249558"
+        "lastLogout": "2026-05-13 06:31:58.020478"
     },
     "naveenbevara@gmail.com": {
         "name": "naveen",

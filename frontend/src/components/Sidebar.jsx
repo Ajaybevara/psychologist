@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { MoonIcon, SunIcon, ChatBubbleLeftRightIcon, ChartBarIcon, SparklesIcon, ShieldCheckIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
+import { MoonIcon, SunIcon, ChatBubbleLeftRightIcon, ChartBarIcon, SparklesIcon, ShieldCheckIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon, BookOpenIcon } from '@heroicons/react/24/outline'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: ChartBarIcon },
   { to: '/chat', label: 'AI Support', icon: ChatBubbleLeftRightIcon },
   { to: '/mood', label: 'Mood Tracker', icon: SparklesIcon },
+  { to: '/journal', label: 'Journal', icon: BookOpenIcon },
   { to: '/tools', label: 'Wellness', icon: ShieldCheckIcon },
   { to: '/admin', label: 'Admin', icon: Cog6ToothIcon }
 ]

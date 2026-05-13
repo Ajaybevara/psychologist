@@ -250,6 +250,113 @@ RESPONSE_TEMPLATES = {
 
 OPENAI_ENABLED = bool(OPENAI_API_KEY)
 
+# Psychology Questions Database based on PDF
+PSYCHOLOGY_QUESTIONS_DB = {
+    'greeting': [
+        'How are you feeling today?',
+        'What brings you here today?',
+        'Tell me about your current emotional state.',
+        'How has your day been treating you?'
+    ],
+    'mood_follow_up': {
+        'sad': [
+            'What has been affecting your emotions recently?',
+            'How long have you been feeling this way?',
+            'What has been weighing on your mind?',
+            'Can you share what triggered this sadness?'
+        ],
+        'anxious': [
+            'What is making you anxious?',
+            'What specific worries are on your mind?',
+            'When does this anxiety typically occur?',
+            'What are you most concerned about right now?'
+        ],
+        'angry': [
+            'What is frustrating you?',
+            'What situation made you angry?',
+            'How are you feeling about this?',
+            'What would help you feel better?'
+        ],
+        'lonely': [
+            'Do you feel lonely?',
+            'What makes you feel isolated?',
+            'Who do you wish you could talk to?',
+            'How long have you felt this way?'
+        ],
+        'stressed': [
+            'What helps you relax?',
+            'What is stressing you the most?',
+            'How do you usually handle stress?',
+            'What would ease your stress?'
+        ],
+        'happy': [
+            'What made you feel happy today?',
+            'What are you grateful for?',
+            'Tell me about something positive that happened.',
+            'What brings you joy?'
+        ]
+    },
+    'supporting_questions': [
+        'Do you overthink often?',
+        'How do you usually cope with difficult emotions?',
+        'Have you experienced this before?',
+        'What support do you have around you?',
+        'What would help you feel better right now?',
+        'Have you talked to anyone about this?',
+        'What are your go-to calming techniques?',
+        'How is this affecting your daily life?'
+    ],
+    'breathing_exercises': [
+        {
+            'name': '4-7-8 Breathing',
+            'description': 'Calming technique for anxiety and stress',
+            'steps': [
+                'Find a comfortable position',
+                'Inhale through your nose for a count of 4',
+                'Hold your breath for a count of 7',
+                'Exhale slowly through your mouth for a count of 8',
+                'Repeat 4-8 times'
+            ]
+        },
+        {
+            'name': 'Box Breathing',
+            'description': 'Grounding exercise for panic attacks',
+            'steps': [
+                'Sit quietly and focus on your breath',
+                'Inhale for a count of 4',
+                'Hold for a count of 4',
+                'Exhale for a count of 4',
+                'Hold for a count of 4',
+                'Repeat 5-10 times'
+            ]
+        },
+        {
+            'name': 'Diaphragmatic Breathing',
+            'description': 'Deep breathing for relaxation',
+            'steps': [
+                'Lie down or sit comfortably',
+                'Place one hand on your chest, one on your belly',
+                'Breathe in deeply through your nose so your belly rises',
+                'Exhale slowly through your mouth',
+                'Focus on belly movement, not chest',
+                'Continue for 5-10 minutes'
+            ]
+        }
+    ],
+    'wellness_suggestions': [
+        'breathing exercises',
+        'calming music suggestions',
+        'journaling prompts',
+        'motivational support',
+        'meditation guidance',
+        'grounding techniques'
+    ]
+}
+
+# Journal data file
+journals_data = load_data('journals.json', [])
+breathing_records = load_data('breathing_records.json', [])
+
 
 def normalize_language(language_code):
     if not language_code:
@@ -476,53 +583,113 @@ def choose_text_variant(value):
     return value
 
 
-def generate_local_response(message, mood, language):
+def analyze_user_behavior(message, history):
+    words = message.split()
+    length = len(words)
+    
+    if length <= 3:
+        detail_style = 'brief'
+    elif length >= 20:
+        detail_style = 'detailed'
+    else:
+        detail_style = 'moderate'
+        
+    is_repeating = False
+    if history and message.strip().lower() in history.lower():
+        is_repeating = True
+        
+    return {
+        'detail_style': detail_style,
+        'is_repeating': is_repeating,
+        'word_count': length
+    }
+
+
+def generate_local_response(message, mood, language, behavior_stats=None):
     exact_response = match_exact_response(message)
     if exact_response:
         return exact_response
 
     normalized = normalize_message_text(message)
     topic = choose_response_topic(message)
-    messages = RESPONSE_TEMPLATES.get(language, RESPONSE_TEMPLATES['en'])
-    template = messages.get(topic, messages['general'])
+    messages_dict = RESPONSE_TEMPLATES.get(language, RESPONSE_TEMPLATES['en'])
+    template = messages_dict.get(topic, messages_dict['general'])
     opening = choose_text_variant(template.get('opening'))
     validate = choose_text_variant(template.get('validate'))
     action = choose_text_variant(template.get('action'))
     support = choose_text_variant(template.get('support'))
 
     repeated_note = ''
-    if any(word in normalized for word in ['same', 'again', 'repeat']):
-        repeated_note = ' I hear that you are asking again, so I am sharing a fresh way to say this.'
+    if behavior_stats and behavior_stats['is_repeating']:
+        if language == 'en':
+            repeated_note = ' I notice you are asking about this again, so let us try looking at it slightly differently.'
+        elif language == 'hi':
+            repeated_note = ' मैं देख रहा हूँ कि आप फिर से पूछ रहे हैं, तो चलिए इसे थोड़ा अलग तरीके से देखते हैं।'
+        elif language == 'te':
+            repeated_note = ' మీరు దీని గురించి మళ్ళీ అడుగుతున్నారని నేను గమనించాను, కాబట్టి దీనిని కొంచెం భిన్నంగా చూద్దాం.'
 
-    extra_detail = ''
-    if topic == 'general' and len(normalized.split()) <= 6:
-        extra_detail = ' If you can share one more sentence, I can give you a more exact suggestion.'
+    behavior_prefix = ''
+    behavior_suffix = ''
+
+    if behavior_stats:
+        if behavior_stats['detail_style'] == 'brief':
+            if language == 'en':
+                behavior_suffix = ' Can you tell me a bit more about what brought this on?'
+            elif language == 'hi':
+                behavior_suffix = ' क्या आप मुझे थोड़ा और बता सकते हैं कि ऐसा क्यों हो रहा है?'
+            elif language == 'te':
+                behavior_suffix = ' దీనికి కారణం ఏమిటో కాస్త వివరిస్తారా?'
+        elif behavior_stats['detail_style'] == 'detailed':
+            if language == 'en':
+                behavior_prefix = 'Thank you for expressing yourself so thoroughly. '
+                behavior_suffix = ' How long have you been feeling this heavy burden?'
+            elif language == 'hi':
+                behavior_prefix = 'इतनी विस्तार से अपनी बात रखने के लिए धन्यवाद। '
+                behavior_suffix = ' आप कब से इस भारीपन को महसूस कर रहे हैं?'
+            elif language == 'te':
+                behavior_prefix = 'ఇంత వివరంగా చెప్పినందుకు ధన్యవాదాలు. '
+                behavior_suffix = ' మీరు ఎంతకాలంగా ఈ భారాన్ని అనుభవిస్తున్నారు?'
+        else:
+            if language == 'en':
+                behavior_suffix = ' What is the hardest part of this for you right now?'
+            elif language == 'hi':
+                behavior_suffix = ' अभी आपके लिए इसमें सबसे कठिन हिस्सा क्या है?'
+            elif language == 'te':
+                behavior_suffix = ' ప్రస్తుతం ఇందులో మీకు అత్యంత కష్టంగా ఉన్న భాగం ఏమిటి?'
 
     return (
-        f"{opening} {validate}{repeated_note}\n\n"
+        f"{behavior_prefix}{opening} {validate}{repeated_note}\n\n"
         f"{action}\n\n"
-        f"{support}{extra_detail}"
+        f"{support}{behavior_suffix}"
     )
 
 
-def build_ai_prompt(message, mood, language, history=''):
+def build_ai_prompt(message, mood, language, history='', behavior_stats=None):
     language_name = SUPPORTED_LANGUAGES.get(language, 'English')
-    repeated_note = ''
-    if history and message.strip().lower() in history.lower():
-        repeated_note = (
-            'The user is repeating the same request or question. Answer with a fresh explanation, use different wording, '
-            'and keep the response tightly focused on the user request. '
-        )
+    
+    style_instruction = ""
+    if behavior_stats:
+        if behavior_stats['detail_style'] == 'brief':
+            style_instruction = "The user sent a very short message. Respond with a warm, concise answer and gently encourage them to share more by asking an exploratory question. "
+        elif behavior_stats['detail_style'] == 'detailed':
+            style_instruction = "The user has shared a detailed and expressive message. Acknowledge the depth of their sharing, validate their complex feelings, and ask a specific follow-up question to deepen the therapeutic dialogue. "
+        else:
+            style_instruction = "Provide a balanced, empathetic response with a practical suggestion, and end by asking a relevant question about their experience. "
+            
+        if behavior_stats['is_repeating']:
+            style_instruction += "The user seems to be repeating a similar point from before. Acknowledge this gently and ask them to elaborate on why this particular feeling is persisting. "
+
     history_block = f"\n\nRecent conversation history:\n{history}\n" if history else ''
     return (
-        f"You are a compassionate, professional psychologist assistant specializing in CBT (Cognitive Behavioral Therapy). "
-        f"Respond in {language_name}. Use simple, clear language and short sentences. "
+        f"You are a highly skilled clinical psychology doctor with 15 years of experience. You specialize in diagnosing and treating psychological conditions using CBT (Cognitive Behavioral Therapy). "
+        f"Respond in {language_name}. Use simple, clear language. "
         f"Focus only on the user’s current message and recent chat history. Do not include unrelated advice or generic small talk. "
         f"Always answer based on the user’s exact request and the emotional keywords they used. "
         f"If the request matches a known topic such as stress, sleep, anxiety, sadness, loneliness, exam pressure, motivation, confidence, or relationships, answer that topic directly. "
-        f"Validate the user’s feeling, summarize what they said, and give one practical next step. "
+        f"Validate the user’s feeling, summarize what they said, and ALWAYS ask one relevant, probing question to better understand their condition and encourage dialogue. "
         f"Use the recent conversation history when it helps keep the response consistent. "
-        f"{repeated_note}{history_block}"
+        f"{style_instruction}"
+        f"{history_block}"
         f"The user's current mood is {mood}. "
         f"User message: {message}. "
         f"Write a helpful answer in {language_name}."
@@ -703,10 +870,12 @@ def chat(current_user):
     sentiment = sentiment_from_text(message)
     reply = None
     history = get_recent_chat_history(current_user, limit=5)
+    
+    behavior_stats = analyze_user_behavior(message, history)
 
     if OPENAI_ENABLED:
         try:
-            prompt = build_ai_prompt(message, mood, requested_language, history=history)
+            prompt = build_ai_prompt(message, mood, requested_language, history=history, behavior_stats=behavior_stats)
             conversation_messages = get_conversation_messages(current_user, limit=5)
             response = openai.ChatCompletion.create(
                 model=OPENAI_MODEL,
@@ -723,9 +892,9 @@ def chat(current_user):
             )
             reply = response.choices[0].message.content.strip()
         except Exception:
-            reply = generate_local_response(message, mood, requested_language)
+            reply = generate_local_response(message, mood, requested_language, behavior_stats=behavior_stats)
     else:
-        reply = generate_local_response(message, mood, requested_language)
+        reply = generate_local_response(message, mood, requested_language, behavior_stats=behavior_stats)
 
     chat_doc = {
         'email': current_user['email'],
@@ -803,11 +972,301 @@ def admin_analytics(current_user):
         1 for user in users_data.values()
         if user.get('lastLogout') and getattr(user['lastLogout'], 'date', lambda: None)() == today
     )
+    
+    # Mood statistics
+    mood_counts = {}
+    for mood_record in moods_data:
+        mood = mood_record.get('mood', 'neutral')
+        mood_counts[mood] = mood_counts.get(mood, 0) + 1
+    
+    # Sentiment statistics
+    sentiment_counts = {}
+    for chat in chats_data:
+        sentiment = chat.get('sentiment', 'neutral')
+        sentiment_counts[sentiment] = sentiment_counts.get(sentiment, 0) + 1
+    
     return jsonify({
         'totalUsers': total_users,
         'totalChats': total_chats,
+        'totalMoodEntries': len(moods_data),
         'todayLogins': today_logins,
-        'todayLogouts': today_logouts
+        'todayLogouts': today_logouts,
+        'moodStatistics': mood_counts,
+        'sentimentStatistics': sentiment_counts
+    })
+
+
+@app.route('/api/admin/mood-analytics', methods=['GET'])
+@token_required
+def admin_mood_analytics(current_user):
+    if current_user.get('role') != 'admin':
+        return jsonify({'error': 'Admin access required.'}), 403
+    
+    mood_by_user = {}
+    for mood_record in moods_data:
+        email = mood_record.get('email')
+        mood = mood_record.get('mood')
+        if email not in mood_by_user:
+            mood_by_user[email] = {}
+        mood_by_user[email][mood] = mood_by_user[email].get(mood, 0) + 1
+    
+    # Daily mood trends
+    daily_trends = {}
+    for mood_record in moods_data:
+        date = mood_record.get('createdAt', datetime.datetime.utcnow()).date()
+        if str(date) not in daily_trends:
+            daily_trends[str(date)] = {}
+        mood = mood_record.get('mood', 'neutral')
+        daily_trends[str(date)][mood] = daily_trends[str(date)].get(mood, 0) + 1
+    
+    return jsonify({
+        'moodByUser': mood_by_user,
+        'dailyTrends': daily_trends
+    })
+
+
+@app.route('/api/admin/conversation-logs', methods=['GET'])
+@token_required
+def admin_conversation_logs(current_user):
+    if current_user.get('role') != 'admin':
+        return jsonify({'error': 'Admin access required.'}), 403
+    
+    user_email = request.args.get('email')
+    limit = int(request.args.get('limit', 100))
+    
+    if user_email:
+        conversations = [c for c in chats_data if c.get('email') == user_email]
+    else:
+        conversations = chats_data
+    
+    sorted_convs = sorted(conversations, key=lambda x: x['createdAt'], reverse=True)[:limit]
+    for conv in sorted_convs:
+        conv['createdAt'] = conv['createdAt'].isoformat()
+    
+    return jsonify({'logs': sorted_convs})
+
+
+@app.route('/api/admin/export-report', methods=['GET'])
+@token_required
+def admin_export_report(current_user):
+    if current_user.get('role') != 'admin':
+        return jsonify({'error': 'Admin access required.'}), 403
+    
+    report_type = request.args.get('type', 'full')
+    
+    report = {
+        'generatedAt': datetime.datetime.utcnow().isoformat(),
+        'reportType': report_type,
+        'data': {}
+    }
+    
+    if report_type in ['full', 'users']:
+        report['data']['users'] = len(users_data)
+        report['data']['userDetails'] = [
+            {
+                'email': user['email'],
+                'name': user['name'],
+                'role': user.get('role', 'user'),
+                'createdAt': user['createdAt'].isoformat() if user.get('createdAt') else '',
+                'lastLogin': user.get('lastLogin', '').isoformat() if user.get('lastLogin') else ''
+            }
+            for user in users_data.values()
+        ]
+    
+    if report_type in ['full', 'moods']:
+        mood_counts = {}
+        for mood_record in moods_data:
+            mood = mood_record.get('mood', 'neutral')
+            mood_counts[mood] = mood_counts.get(mood, 0) + 1
+        report['data']['totalMoods'] = len(moods_data)
+        report['data']['moodDistribution'] = mood_counts
+    
+    if report_type in ['full', 'chats']:
+        report['data']['totalChats'] = len(chats_data)
+        sentiment_counts = {}
+        for chat in chats_data:
+            sentiment = chat.get('sentiment', 'neutral')
+            sentiment_counts[sentiment] = sentiment_counts.get(sentiment, 0) + 1
+        report['data']['sentimentDistribution'] = sentiment_counts
+    
+    if report_type in ['full', 'journals']:
+        user_journals = {}
+        for journal in journals_data:
+            email = journal.get('email')
+            if email not in user_journals:
+                user_journals[email] = 0
+            user_journals[email] += 1
+        report['data']['totalJournals'] = len(journals_data)
+        report['data']['journalsByUser'] = user_journals
+    
+    return jsonify(report)
+
+
+# ============= Journaling Endpoints =============
+
+@app.route('/api/journal', methods=['POST'])
+@token_required
+def create_journal(current_user):
+    data = request.json or {}
+    title = data.get('title', '')
+    content = data.get('content', '')
+    mood = data.get('mood', 'neutral')
+    
+    if not title or not content:
+        return jsonify({'error': 'Title and content are required.'}), 400
+    
+    journal_entry = {
+        'email': current_user['email'],
+        'title': title,
+        'content': content,
+        'mood': mood,
+        'createdAt': datetime.datetime.utcnow()
+    }
+    journals_data.append(journal_entry)
+    save_data('journals.json', journals_data)
+    
+    return jsonify({
+        'message': 'Journal entry saved.',
+        'entry': journal_entry
+    })
+
+
+@app.route('/api/journal/history', methods=['GET'])
+@token_required
+def journal_history(current_user):
+    user_journals = [j for j in journals_data if j.get('email') == current_user['email']]
+    sorted_journals = sorted(user_journals, key=lambda x: x['createdAt'], reverse=True)
+    for journal in sorted_journals:
+        journal['createdAt'] = journal['createdAt'].isoformat()
+    
+    return jsonify({'journals': sorted_journals})
+
+
+@app.route('/api/journal/<int:index>', methods=['GET'])
+@token_required
+def get_journal(current_user, index):
+    user_journals = [j for j in journals_data if j.get('email') == current_user['email']]
+    sorted_journals = sorted(user_journals, key=lambda x: x['createdAt'], reverse=True)
+    
+    if index < 0 or index >= len(sorted_journals):
+        return jsonify({'error': 'Journal not found.'}), 404
+    
+    journal = sorted_journals[index]
+    journal['createdAt'] = journal['createdAt'].isoformat()
+    return jsonify(journal)
+
+
+# ============= Breathing Exercises Endpoints =============
+
+@app.route('/api/breathing/exercises', methods=['GET'])
+@token_required
+def get_breathing_exercises(current_user):
+    return jsonify({
+        'exercises': PSYCHOLOGY_QUESTIONS_DB['breathing_exercises']
+    })
+
+
+@app.route('/api/breathing/complete', methods=['POST'])
+@token_required
+def complete_breathing_exercise(current_user):
+    data = request.json or {}
+    exercise_name = data.get('exerciseName', '')
+    duration = data.get('duration', 0)
+    
+    if not exercise_name:
+        return jsonify({'error': 'Exercise name required.'}), 400
+    
+    record = {
+        'email': current_user['email'],
+        'exerciseName': exercise_name,
+        'duration': duration,
+        'createdAt': datetime.datetime.utcnow()
+    }
+    breathing_records.append(record)
+    save_data('breathing_records.json', breathing_records)
+    
+    return jsonify({
+        'message': 'Breathing exercise recorded.',
+        'record': record
+    })
+
+
+@app.route('/api/breathing/history', methods=['GET'])
+@token_required
+def breathing_history(current_user):
+    user_records = [r for r in breathing_records if r.get('email') == current_user['email']]
+    sorted_records = sorted(user_records, key=lambda x: x['createdAt'], reverse=True)
+    for record in sorted_records:
+        record['createdAt'] = record['createdAt'].isoformat()
+    
+    return jsonify({'history': sorted_records})
+
+
+# ============= Mood Analytics Endpoints =============
+
+@app.route('/api/mood/analytics', methods=['GET'])
+@token_required
+def mood_analytics(current_user):
+    user_moods = [m for m in moods_data if m.get('email') == current_user['email']]
+    
+    # Mood distribution
+    mood_counts = {}
+    for mood_record in user_moods:
+        mood = mood_record.get('mood', 'neutral')
+        mood_counts[mood] = mood_counts.get(mood, 0) + 1
+    
+    # Weekly trends
+    weekly_trends = {}
+    for mood_record in user_moods:
+        date = mood_record.get('createdAt', datetime.datetime.utcnow())
+        week_start = (date - datetime.timedelta(days=date.weekday())).date()
+        if str(week_start) not in weekly_trends:
+            weekly_trends[str(week_start)] = {}
+        mood = mood_record.get('mood', 'neutral')
+        weekly_trends[str(week_start)][mood] = weekly_trends[str(week_start)].get(mood, 0) + 1
+    
+    # Average wellness score
+    wellness_score = min(100, 50 + len(user_moods) * 2)  # Simple calculation
+    
+    return jsonify({
+        'totalEntries': len(user_moods),
+        'moodDistribution': mood_counts,
+        'weeklyTrends': weekly_trends,
+        'wellnessScore': wellness_score
+    })
+
+
+# ============= Psychology Questions Endpoints =============
+
+@app.route('/api/psychology/next-question', methods=['POST'])
+@token_required
+def get_next_question(current_user):
+    data = request.json or {}
+    current_mood = data.get('mood', 'neutral')
+    question_type = data.get('type', 'follow_up')
+    
+    if question_type == 'greeting':
+        questions = PSYCHOLOGY_QUESTIONS_DB['greeting']
+    elif question_type == 'follow_up' and current_mood in PSYCHOLOGY_QUESTIONS_DB['mood_follow_up']:
+        questions = PSYCHOLOGY_QUESTIONS_DB['mood_follow_up'][current_mood]
+    else:
+        questions = PSYCHOLOGY_QUESTIONS_DB['supporting_questions']
+    
+    question = random.choice(questions)
+    return jsonify({
+        'question': question,
+        'type': question_type,
+        'mood': current_mood
+    })
+
+
+@app.route('/api/psychology/wellness-suggestion', methods=['GET'])
+@token_required
+def get_wellness_suggestion(current_user):
+    suggestion = random.choice(PSYCHOLOGY_QUESTIONS_DB['wellness_suggestions'])
+    return jsonify({
+        'suggestion': suggestion,
+        'message': f'Would you like to try {suggestion}?'
     })
 
 
